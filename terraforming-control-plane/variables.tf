@@ -1,6 +1,22 @@
+# Required variables:
+
 variable "client_id" {}
 
 variable "client_secret" {}
+
+variable "subscription_id" {}
+
+variable "tenant_id" {}
+
+variable "dns_suffix" {}
+
+variable "env_name" {}
+
+variable "env_short_name" {}
+
+variable "location" {}
+
+# Optional variables (the following have default values):
 
 variable "cloud_name" {
   description = "The Azure cloud environment to use. Available values at https://www.terraform.io/docs/providers/azurerm/#environment"
@@ -13,13 +29,6 @@ variable "dns_subdomain" {
   "default"     = ""
 }
 
-variable "dns_suffix" {}
-
-variable "env_name" {}
-
-variable "env_short_name" {}
-
-variable "location" {}
 
 variable "ops_manager_image_uri" {
   default = ""
@@ -58,14 +67,10 @@ variable "plane_cidr" {
   default = ""
 }
 
-locals {
-  plane_cidr = "${var.plane_cidr != "" ? var.plane_cidr : cidrsubnet(element(var.pcf_virtual_network_address_space, 0), 6, 63)}"
-}
-
-variable "subscription_id" {}
-
-variable "tenant_id" {}
-
 variable "postgres_username" {
   default = "pgadmin"
+}
+
+locals {
+  plane_cidr = "${var.plane_cidr != "" ? var.plane_cidr : cidrsubnet(element(var.pcf_virtual_network_address_space, 0), 6, 63)}"
 }

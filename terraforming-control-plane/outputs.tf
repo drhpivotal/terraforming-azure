@@ -102,8 +102,16 @@ output "ops_manager_private_ip" {
 
 # Control Plane ==========================================================================
 
-output "control_plane_cidr" {
+output "control_plane_subnet_cidr" {
   value = "${module.control_plane.cidr}"
+}
+
+output "control_plane_subnet_name" {
+  value = "${module.control_plane.network_name}"
+}
+
+output "control_plane_subnet_gateway" {
+  value = "${cidrhost(module.control_plane.cidr, 0)}"
 }
 
 output "control_plane_db_password" {
@@ -112,4 +120,16 @@ output "control_plane_db_password" {
 
 output "control_plane_fqdn" {
   value = "${module.control_plane.postgres_fqdn}"
+}
+
+output "control_plane_lb_name" {
+  value = "${module.control_plane.plane_lb_name}"
+}
+
+output "control_plane_db_username" {
+  value = "${module.control_plane.postgres_username}"
+}
+
+output "control_plane_domain" {
+  value = "${module.control_plane.dns_name}"
 }

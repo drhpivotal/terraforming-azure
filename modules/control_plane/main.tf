@@ -21,14 +21,12 @@ resource "azurerm_public_ip" "plane" {
   name                         = "${local.name_prefix}-ip"
   location                     = "${var.location}"
   public_ip_address_allocation = "static"
-  sku                          = "Standard"
 }
 
 resource "azurerm_lb" "plane" {
   resource_group_name = "${var.resource_group_name}"
   name                = "${var.env_name}-lb"
   location            = "${var.location}"
-
   frontend_ip_configuration {
     name                 = "${local.name_prefix}-ip"
     public_ip_address_id = "${azurerm_public_ip.plane.id}"
@@ -104,10 +102,10 @@ resource "azurerm_postgresql_server" "plane" {
   location            = "${var.location}"
 
   sku {
-    name = "B_Gen4_2"
+    name = "B_Gen5_2"
     capacity = 2
     tier = "Basic"
-    family = "Gen4"
+    family = "Gen5"
   }
 
   storage_profile {
@@ -120,6 +118,8 @@ resource "azurerm_postgresql_server" "plane" {
   administrator_login_password = "${random_string.postgres_password.result}"
   version = "9.6"
   ssl_enforcement = "Enabled"
+
+  count = "${var.external_db ? 1 : 0}"
 }
 
 resource "azurerm_postgresql_database" "plane" {
@@ -129,6 +129,8 @@ resource "azurerm_postgresql_database" "plane" {
   server_name = "${azurerm_postgresql_server.plane.name}"
   charset = "UTF8"
   collation = "English_United States.1252"
+
+  count = "${var.external_db ? length(local.databases) : 0}"
 }
 
 resource "random_string" "postgres_password" {
